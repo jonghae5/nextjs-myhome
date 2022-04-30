@@ -1,0 +1,14 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+@font-face {
+  font-family: 'Jalnan';
+  src: url('../public/static/fonts/Jalnan.ttf') format('truetype'),
+    url('../public/static/fonts/JalnanOTF.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
