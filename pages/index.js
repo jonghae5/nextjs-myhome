@@ -1,14 +1,11 @@
 // import Head from 'next/head';
 // import Image from 'next/image';
 import { Toolbar, Typography, Fab, Container } from '@mui/material';
-import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ScrollTop from '../components/ScrollTop';
 import { useEffect } from 'react';
-import { letterSpacing } from '@mui/system';
-import ResponsiveFooter from '../components/ResponsiveFooter';
+
 import AppLayout from '../components/AppLayout';
-import Head from 'next/head';
 
 export default function Home() {
   // 예시
@@ -21,7 +18,6 @@ export default function Home() {
   useEffect(() => {
     win = typeof window !== 'undefined' ? window : undefined;
   }, []);
-  // console.log(win);
 
   return (
     <>

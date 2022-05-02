@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Paper,
+  Content,
   ThemeProvider,
   BottomNavigation,
   BottomNavigationAction,
+  Box,
+  AppBar,
 } from '@mui/material';
 import theme from '../theme/theme';
 import CalculateIcon from '@mui/icons-material/Calculate';
@@ -14,7 +16,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 const ResponsiveFooter = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
+      <AppBar position='fixed' style={{ top: 'auto', bottom: 0 }}>
         <BottomNavigation
           sx={{
             justifyContent: 'space-between',
@@ -26,7 +28,7 @@ const ResponsiveFooter = () => {
           <BottomNavigationAction label='Calculates' icon={<CalculateIcon />} />
           <BottomNavigationAction label='Location' icon={<LocationOnIcon />} />
         </BottomNavigation>
-      </Paper>
+      </AppBar>
     </ThemeProvider>
   );
 };

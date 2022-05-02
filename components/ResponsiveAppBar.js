@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -13,16 +13,18 @@ import {
   MenuItem,
   ThemeProvider,
 } from '@mui/material';
+import { useRouter } from 'next/router';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import theme from '../theme/theme';
 
-const pages = ['Products', 'Pricing', 'Blog']; // page
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']; // setting
-const title = '내 집은 어디에';
-
 const ResponsiveAppBar = () => {
+  const router = useRouter();
   const [anchorElNav, setAnchorElNav] = useState();
   const [anchorElUser, setAnchorElUser] = useState();
+  const pages = ['주택구매능력', '소득지출비교']; // page
+  const settings = ['Profile', 'Account', 'Dashboard', 'Logout']; // setting
+  const title = '내 집은 어디에';
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
@@ -31,22 +33,36 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = useCallback(() => {
     setAnchorElNav(null);
-  };
+  });
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = useCallback(() => {
     setAnchorElUser(null);
-  };
+  });
+
+  const movePage = useCallback(page => {
+    switch (page) {
+      case '주택구매능력':
+        return router.push('ability');
+      case '소득지출비교':
+        return router.push('compare');
+    }
+  });
+
+  const moveHome = useCallback(() => {
+    router.push('/');
+  });
 
   return (
     <ThemeProvider theme={theme}>
       <AppBar
         position='sticky'
-        style={{ background: '#FFFFFF', marginBottom: 20 }}
+        style={{ backgroundColor: '#FFFFFF', marginBottom: 20 }}
       >
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
+            {/* md title */}
             <Typography
               variant='h6'
               noWrap
@@ -60,7 +76,8 @@ const ResponsiveAppBar = () => {
             >
               {title}
             </Typography>
-            {/* 박스 메뉴 */}
+
+            {/* xs 박스 메뉴 */}
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size='large'
@@ -93,7 +110,12 @@ const ResponsiveAppBar = () => {
               >
                 {pages.map(page => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign='center'>{page}</Typography>
+                    <Typography
+                      textAlign='center'
+                      onClick={() => movePage(page)}
+                    >
+                      {page}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -104,10 +126,11 @@ const ResponsiveAppBar = () => {
               component='div'
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
               color='#000000'
+              onClick={moveHome}
             >
               {title}
             </Typography>
-            {/* Box 메뉴 */}
+            {/* md Box 메뉴 */}
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map(page => (
                 <Button
@@ -119,6 +142,7 @@ const ResponsiveAppBar = () => {
                 </Button>
               ))}
             </Box>
+
             {/* USER 메뉴 */}
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title='Open settings'>
