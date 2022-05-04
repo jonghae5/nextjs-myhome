@@ -20,7 +20,7 @@ const ResponsiveFooter = () => {
         <BottomNavigation
           sx={{
             justifyContent: 'space-between',
-            backgroundColor: 'white',
+            color: 'white',
             boxShadow: 15,
           }}
         >

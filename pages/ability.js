@@ -1,19 +1,19 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React from 'react';
 import AppLayout from '../components/AppLayout';
 
 import AbilityFormMoney from '../components/AbilityFormMoney';
 import AbilityFormHome from '../components/AbilityFormHome';
 import AbilityFormLoan from '../components/AbilityFormLoan';
-
 import CheckoutForm from '../components/CheckoutForm';
+import { initialState } from '../slices/abilitySlice';
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AbilityFormMoney />;
+      return <AbilityFormMoney formName='ability' />;
     case 1:
-      return <AbilityFormHome />;
+      return <AbilityFormHome formName='ability' />;
     case 2:
-      return <AbilityFormLoan />;
+      return <AbilityFormLoan formName='ability' />;
   }
 }
 
@@ -26,6 +26,8 @@ const Ability = () => {
         title={`주택 구매 능력`}
         steps={steps}
         getStepContent={getStepContent}
+        data='ability'
+        initialValue={initialState}
       />
     </AppLayout>
   );
