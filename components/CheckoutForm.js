@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
+
 import {
   Paper,
   Container,
@@ -15,7 +16,8 @@ import ScrollTop from '../components/ScrollTop';
 import { Formik, Form } from 'formik';
 import { useDispatch } from 'react-redux';
 
-import { addAbility, asyncAddAbility } from '../slices/abilitySlice';
+import { abilityFormSchema } from '../util/abilitySchema';
+import { addAbility, asyncAddAbilityInfo } from '../slices/abilitySlice';
 import { addCompare, asyncAddCompare } from '../slices/compareSlice';
 import { useRouter } from 'next/router';
 const generateRandomString = () => Math.random().toString(36).slice(2);
@@ -34,6 +36,15 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
     setActiveStep(prev => prev - 1);
   });
 
+  const goBack = useCallback(() => {
+    switch (data) {
+      case COMPARE:
+        return router.push('/compare');
+      case ABILITY:
+        return router.push('/ability');
+    }
+  });
+
   const onSubmit = useCallback(async value => {
     switch (data) {
       case COMPARE:
@@ -46,7 +57,7 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
 
       case ABILITY:
         console.log(value);
-        await dispatch(asyncAddAbility(value));
+        await dispatch(asyncAddAbilityInfo(value));
         handleNext();
         router.push(`result/${generateRandomString()}`);
         return;
@@ -89,46 +100,56 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
             </Typography>
           ) : (
             <>
-              <Formik initialValues={initialValue} onSubmit={v => onSubmit(v)}>
-                <Form>
-                  {getStepContent(activeStep)}
-                  <Box
-                    sx={{ display: 'flex' }}
-                    justifyContent={
-                      activeStep === 0 ? 'flex-end' : 'space-between'
-                    }
-                  >
-                    {activeStep !== 0 && (
-                      <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                        Back
-                      </Button>
-                    )}
-                    {activeStep !== steps.length - 1 && (
-                      <Button
-                        variant='contained'
-                        onClick={handleNext}
-                        sx={{ mt: 3, ml: 1 }}
-                      >
-                        Next
-                      </Button>
-                    )}
-                    {activeStep === steps.length - 1 && (
-                      <Button
-                        type='submit'
-                        variant='contained'
-                        sx={{ mt: 3, ml: 1 }}
-                      >
-                        완료
-                      </Button>
-                    )}
-                  </Box>
+              <Formik
+                initialValues={initialValue}
+                onSubmit={v => onSubmit(v)}
+                validationSchema={data === ABILITY ? abilityFormSchema : null}
+              >
+                {props => (
+                  <Form>
+                    {getStepContent(activeStep)}
+                    <Box
+                      sx={{ display: 'flex' }}
+                      justifyContent={'space-between'}
+                    >
+                      {activeStep === 0 && (
+                        <Button onClick={goBack} sx={{ mt: 3, ml: 1 }}>
+                          Back
+                        </Button>
+                      )}
+                      {activeStep !== 0 && (
+                        <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                          Back
+                        </Button>
+                      )}
+                      {activeStep !== steps.length - 1 && (
+                        <Button
+                          variant='contained'
+                          onClick={handleNext}
+                          sx={{ mt: 3, ml: 1 }}
+                        >
+                          Next
+                        </Button>
+                      )}
+                      {activeStep === steps.length - 1 && (
+                        <Button
+                          type='submit'
+                          variant='contained'
+                          sx={{ mt: 3, ml: 1 }}
+                          disabled={!(props.dirty && props.isValid)}
+                        >
+                          완료
+                        </Button>
+                      )}
+                    </Box>
 
-                  <ScrollTop window={win}>
-                    <Fab size='small' aria-label='scroll back to top'>
-                      <KeyboardArrowUpIcon />
-                    </Fab>
-                  </ScrollTop>
-                </Form>
+                    <ScrollTop window={win}>
+                      <Fab size='small' aria-label='scroll back to top'>
+                        <KeyboardArrowUpIcon />
+                      </Fab>
+                    </ScrollTop>
+                  </Form>
+                )}
               </Formik>
             </>
           )}

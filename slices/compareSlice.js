@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 const name = 'compare';
 
 export const initialState = {
-  compare: {
+  data: {
     homeFirst: '',
     necessityFirst: '',
     nurtureFirst: '',
@@ -54,16 +54,41 @@ export const asyncAddCompare = createAsyncThunk(
   }
 );
 
+export const asyncAddBasicCompare = createAsyncThunk(
+  `${name}/basic`,
+  async (data, thunkAPI) => {
+    // const response = await thunkAPI.post(data)
+    await delay();
+
+    return data;
+  }
+);
+
 export const compareSlice = createSlice({
   name,
   initialState,
   reducers: {
     addCompare: (state, action) => {
       console.log('완료');
-      state.compare = action.payload.compare;
+      state = action.payload.compare;
     },
   },
   extraReducers: {
+    [asyncAddBasicCompare.pending]: (state, action) => {
+      console.log('시도 중');
+      state.loading = true;
+    },
+    [asyncAddBasicCompare.fulfilled]: (state, action) => {
+      console.log('성공');
+      state.loading = false;
+      state.compare = action.payload.compare;
+    },
+    [asyncAddBasicCompare.rejected]: (state, action) => {
+      console.log('실패');
+      state.loading = false;
+      state.compare = initialState.compare;
+    },
+
     [asyncAddCompare.pending]: (state, action) => {
       console.log('시도 중');
       state.loading = true;

@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import theme from '../theme/theme';
+import theme from '../../theme/theme';
 
 const ResponsiveAppBar = () => {
   const router = useRouter();
@@ -44,9 +44,9 @@ const ResponsiveAppBar = () => {
   const movePage = useCallback(page => {
     switch (page) {
       case '주택구매능력':
-        return router.push('ability');
+        return router.push('/ability');
       case '소득지출비교':
-        return router.push('compare');
+        return router.push('/compare');
     }
   });
 

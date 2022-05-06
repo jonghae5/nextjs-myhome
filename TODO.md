@@ -20,6 +20,9 @@
 
 - Loading page / Random Page 생성 [O]
 
-## 5.5 TODO LIST
+## 5.5 / 5.6 TODO LIST
 
-- Naver Map API 가져오기
+- 상세 설명 구현 [O]
+- yup 설치 (schema-based form-level validation) / Button Disabled 구현[O]
+- 로그인 화면 구현[]
+- Naver Map API 가져오기[]

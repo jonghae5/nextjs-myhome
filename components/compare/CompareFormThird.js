@@ -1,20 +1,26 @@
 import React from 'react';
-import { Grid, Box } from '@mui/material';
-import useInput from '../hooks/useInput';
+import { Grid, Box, Typography } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
-const CompareFormFirst = ({ formName = 'compare' }) => {
-  const first = ['주거비', '생필품비', '양육비', '의류비'];
+const CompareFormThird = ({ formName = 'compare' }) => {
+  const third = ['통신비', '보험료', '경조사', '저축'];
 
   return (
     <Grid container spacing={0.5}>
+      <Grid item xs={12}>
+        <Box display='flex' alignItems='center' justifyContent='center'>
+          <Typography variant='h6' component='div'>
+            기존 대출 금액
+          </Typography>
+        </Box>
+      </Grid>
       <Grid item xs={12} sm={6}>
         <Box display='flex' alignItems='center' justifyContent='center'>
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
-            label='주거비'
-            name={`${formName}.homeFirst`}
+            label='통신비'
+            name={`${formName}.communicationThird`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
@@ -26,8 +32,8 @@ const CompareFormFirst = ({ formName = 'compare' }) => {
         <Box display='flex' alignItems='center' justifyContent='center'>
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
-            label='생필품비'
-            name={`${formName}.necessityFirst`}
+            label='보험료'
+            name={`${formName}.insuranceThird`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
@@ -39,8 +45,8 @@ const CompareFormFirst = ({ formName = 'compare' }) => {
         <Box display='flex' alignItems='center' justifyContent='center'>
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
-            label='양육비'
-            name={`${formName}.nurtureFirst`}
+            label='경조사'
+            name={`${formName}.gitfThird`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
@@ -52,8 +58,8 @@ const CompareFormFirst = ({ formName = 'compare' }) => {
         <Box display='flex' alignItems='center' justifyContent='center'>
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
-            label='의료비'
-            name={`${formName}.clothFirst`}
+            label='저축'
+            name={`${formName}.savingThird`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
@@ -64,4 +70,5 @@ const CompareFormFirst = ({ formName = 'compare' }) => {
     </Grid>
   );
 };
-export default CompareFormFirst;
+
+export default CompareFormThird;

@@ -1,5 +1,5 @@
 import React from 'react';
-import AppLayout from '../../components/AppLayout';
+import AppLayout from '../../../components/AppLayout';
 
 const generateRandomString = () => Math.random().toString(36).slice(2);
 

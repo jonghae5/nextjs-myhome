@@ -7,7 +7,7 @@ import {
   Box,
   AppBar,
 } from '@mui/material';
-import theme from '../theme/theme';
+import theme from '../../theme/theme';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import RestoreIcon from '@mui/icons-material/Restore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';

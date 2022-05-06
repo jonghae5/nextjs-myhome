@@ -5,7 +5,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ScrollTop from '../components/ScrollTop';
 import { useEffect } from 'react';
 
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../components/layout/AppLayout';
 
 export default function Home() {
   // 예시

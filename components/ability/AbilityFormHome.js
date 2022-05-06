@@ -1,25 +1,43 @@
 import React from 'react';
-import { Grid, Box } from '@mui/material';
-import useInput from '../hooks/useInput';
+import { Grid, Box, Typography } from '@mui/material';
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const AbilityFormHome = ({ formName = 'ability' }) => {
   const home = ['전월세보증금', '주택매매시세'];
-
+  // inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
   return (
     <Grid container spacing={0.5}>
+      <Grid item xs={12}>
+        <Box display='flex' alignItems='center' justifyContent='center'>
+          <Typography variant='h6' component='div'>
+            주택 관련자금
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Box display='flex' alignItems='center' justifyContent='center'>
+          <Typography component='div'>
+            본인 거주 보증금, 보유 주택 시세
+          </Typography>
+        </Box>
+      </Grid>
       <Grid item xs={12} sm={6}>
         <Box display='flex' alignItems='center' justifyContent='center'>
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
             label='전월세보증금'
-            name={`${formName}.jeonDepositHome`}
+            name={`jeonDepositHome`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
             variant='standard'
+            type='number'
+            inputProps={{
+              inputMode: 'numeric',
+              pattern: '[0-9]*',
+            }}
           />
         </Box>
       </Grid>
@@ -29,11 +47,16 @@ const AbilityFormHome = ({ formName = 'ability' }) => {
           <AccountCircle sx={{ color: 'action.active', mr: 2, my: 1 }} />
           <Field
             label='주택매매시세'
-            name={`${formName}.jutaekPriceHome`}
+            name={`jutaekPriceHome`}
             component={TextField}
             sx={{ mr: 2 }}
             fullWidth
             variant='standard'
+            type='number'
+            inputProps={{
+              inputMode: 'numeric',
+              pattern: '[0-9]*',
+            }}
           />
         </Box>
       </Grid>

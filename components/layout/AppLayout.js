@@ -8,7 +8,7 @@ const AppLayout = ({ children }) => {
       <ResponsiveAppBar />
       {children}
       <Box paddingBottom='72px'></Box>
-      <ResponsiveFooter />
+      {/* <ResponsiveFooter /> */}
     </>
   );
 };
