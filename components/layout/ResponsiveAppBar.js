@@ -53,6 +53,9 @@ const ResponsiveAppBar = () => {
   const moveHome = useCallback(() => {
     router.push('/');
   });
+  const moveLogin = useCallback(() => {
+    router.push('/login');
+  });
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,6 +76,7 @@ const ResponsiveAppBar = () => {
                 fontFamily: 'Jalnan',
               }}
               color='#000000'
+              onClick={moveHome}
             >
               {title}
             </Typography>
@@ -135,7 +139,7 @@ const ResponsiveAppBar = () => {
               {pages.map(page => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => movePage(page)}
                   sx={{ my: 2, color: 'black', display: 'block' }}
                 >
                   {page}
@@ -166,11 +170,17 @@ const ResponsiveAppBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map(setting => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem onClick={moveLogin}>
+                  <Typography textAlign='center'>Profile</Typography>
+                </MenuItem>
+                <MenuItem onClick={moveLogin}>
+                  <Typography textAlign='center'>Account</Typography>
+                </MenuItem>
+                <MenuItem onClick={moveLogin}>
+                  <Typography textAlign='center' onClick={moveLogin}>
+                    Login
+                  </Typography>
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>

@@ -63,8 +63,8 @@ const WriteForm = ({ formName, title, initialValue }) => {
                         name={`yearMoney`}
                         sx={{ mr: 2 }}
                         fullWidth
-                        variant='standard'
                         type='number'
+                        variant='standard'
                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                       />
                     </Box>

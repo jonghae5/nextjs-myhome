@@ -1,5 +1,5 @@
 import React from 'react';
-import AppLayout from '../../components/AppLayout';
+import AppLayout from '../../components/layout/AppLayout';
 import WriteForm from '../../components/WriteForm';
 import { initialState } from '../../slices/compareSlice';
 const BasicCompare = () => {
