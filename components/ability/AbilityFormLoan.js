@@ -3,7 +3,7 @@ import { Grid, Box, Typography } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
-
+import { handleEnter } from '../../util/handleEnter';
 const AbilityFormLoan = ({ formName = 'ability' }) => {
   const loan = [
     '전월보증대출',
@@ -35,10 +35,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -53,10 +54,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -71,10 +73,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -89,10 +92,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -107,10 +111,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -125,10 +130,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -143,10 +149,11 @@ const AbilityFormLoan = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>

@@ -61,9 +61,12 @@ const ResponsiveAppBar = () => {
     <ThemeProvider theme={theme}>
       <AppBar
         position='sticky'
-        style={{ backgroundColor: '#FFFFFF', marginBottom: 20 }}
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginBottom: 0,
+        }}
       >
-        <Container maxWidth='xl'>
+        <Container sx={{ p: 0 }}>
           <Toolbar disableGutters>
             {/* md title */}
             <Typography
@@ -150,7 +153,10 @@ const ResponsiveAppBar = () => {
             {/* USER 메뉴 */}
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title='Open settings'>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ marginRight: 0 }}
+                >
                   <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
                 </IconButton>
               </Tooltip>

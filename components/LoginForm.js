@@ -5,6 +5,7 @@ import {
   Paper,
   Typography,
   Grid,
+  Box,
 } from '@mui/material';
 import { Field, Formik, Form } from 'formik';
 import { TextField } from 'formik-mui';
@@ -28,12 +29,11 @@ const LoginForm = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   //   status === "authenticated" ?
-  useEffect(() => {
-    console.log(session);
-    console.log(process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID);
-  }, [session]);
-  //   const [session, loading] = useSession();
-  //   if (typeof window !== 'undefined' && loading) return null;
+
+  //   useEffect(() => {
+  //     console.log(session);
+  //     console.log(process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID);
+  //   }, [session]);
 
   return (
     <>
@@ -94,15 +94,20 @@ const LoginForm = () => {
                   회원가입
                 </Button>
 
-                <Grid container spacing={0.5} justifyContent='space-around'>
-                  <Grid item xs={6}>
+                <Grid container spacing={0.5} justifyContent='space-between'>
+                  <Grid item xs={6} sm={6} textAlign='center'>
                     {!session && (
                       <Button onClick={() => signIn('naver')} sx={{ mt: 0.2 }}>
-                        <img
-                          src='/static/images/btnG_완성형.png'
-                          width='240'
-                          height='56'
+                        <Box
+                          component='img'
+                          sx={{
+                            height: 45,
+                            width: 200,
+                            maxHeight: { xs: 40, sm: 70 },
+                            maxWidth: { xs: 150, sm: 240 },
+                          }}
                           alt='네이버 로그인 버튼'
+                          src='/static/images/btnG_완성형.png'
                         />
                       </Button>
                     )}
@@ -112,24 +117,34 @@ const LoginForm = () => {
                           onClick={() => signOut('naver')}
                           sx={{ mt: 0.2 }}
                         >
-                          <img
+                          <Box
+                            component='img'
+                            sx={{
+                              height: 45,
+                              width: 200,
+                              maxHeight: { xs: 40, sm: 70 },
+                              maxWidth: { xs: 150, sm: 240 },
+                            }}
+                            alt='네이버 로그아웃 버튼'
                             src='/static/images/btnG_로그아웃.png'
-                            width='240'
-                            height='56'
-                            alt='네이버 로그인 버튼'
                           />
                         </Button>
                       </>
                     )}
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={6} sm={6} textAlign='center'>
                     {!session && (
                       <Button onClick={() => signIn('kakao')} sx={{ mt: 0.2 }}>
-                        <img
+                        <Box
+                          component='img'
+                          sx={{
+                            height: 45,
+                            width: 200,
+                            maxHeight: { xs: 40, sm: 70 },
+                            maxWidth: { xs: 150, sm: 240 },
+                          }}
+                          alt='카카오 로그아웃 버튼'
                           src='/static/images/kakao_login_large_narrow.png'
-                          width='240'
-                          height='56'
-                          alt='카카오 로그인 버튼'
                         />
                       </Button>
                     )}

@@ -3,7 +3,7 @@ import { Grid, Box, Typography } from '@mui/material';
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-
+import { handleEnter } from '../../util/handleEnter';
 const AbilityFormHome = ({ formName = 'ability' }) => {
   const home = ['전월세보증금', '주택매매시세'];
   // inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
@@ -34,10 +34,11 @@ const AbilityFormHome = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -53,10 +54,11 @@ const AbilityFormHome = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>

@@ -8,7 +8,7 @@ import { asyncAddAbilityBasicInfo } from '../slices/abilitySlice';
 import { asyncAddBasicCompare } from '../slices/compareSlice';
 import { useDispatch } from 'react-redux';
 import { abilityBasicFormSchema } from '../util/abilitySchema';
-
+import { handleEnter } from '../util/handleEnter';
 const WriteForm = ({ formName, title, initialValue }) => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -63,9 +63,10 @@ const WriteForm = ({ formName, title, initialValue }) => {
                         name={`yearMoney`}
                         sx={{ mr: 2 }}
                         fullWidth
-                        type='number'
                         variant='standard'
-                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        // inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        onKeyPress={handleEnter}
+                        type='number'
                       />
                     </Box>
                   </Grid>
@@ -89,10 +90,11 @@ const WriteForm = ({ formName, title, initialValue }) => {
                             fullWidth
                             variant='standard'
                             type='number'
-                            inputProps={{
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
-                            }}
+                            // inputProps={{
+                            //   inputMode: 'numeric',
+                            //   pattern: '[0-9]*',
+                            // }}
+                            onKeyPress={handleEnter}
                           />
                         </Box>
                       </Grid>
@@ -113,10 +115,11 @@ const WriteForm = ({ formName, title, initialValue }) => {
                             fullWidth
                             variant='standard'
                             type='number'
-                            inputProps={{
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
-                            }}
+                            // inputProps={{
+                            //   inputMode: 'numeric',
+                            //   pattern: '[0-9]*',
+                            // }}
+                            onKeyPress={handleEnter}
                           />
                         </Box>
                       </Grid>
@@ -140,10 +143,11 @@ const WriteForm = ({ formName, title, initialValue }) => {
                             fullWidth
                             variant='standard'
                             type='number'
-                            inputProps={{
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
-                            }}
+                            // inputProps={{
+                            //   inputMode: 'numeric',
+                            //   pattern: '[0-9]*',
+                            // }}
+                            onKeyPress={handleEnter}
                           />
                         </Box>
                       </Grid>

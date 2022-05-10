@@ -58,7 +58,7 @@ NextAuthJS는 특정 Callback Redirect URI를 지정
   NEXTAUTH_URL : callback URL
   https://next-auth.js.org/getting-started/example
 
-- Kakao Map API 가져오기[]
+- Kakao Map API 가져오기[O]
   https://apis.map.kakao.com/
   autoload=false : 지도 불러오는 script 순서를 조절해준다.
   CSR 과 SSR 차이
@@ -66,3 +66,48 @@ NextAuthJS는 특정 Callback Redirect URI를 지정
 
   클러스터링
   libraries=services,clusterer,drawing HEAD 입력
+
+## 5.9 TODO LIST
+
+- PC 웹, 모바일 웹 크기 조절
+  '''
+  <>
+  <Container sx={{ paddingX: 0 }} maxWidth='sm'>
+  <ResponsiveAppBar />
+  {children}
+  <Box paddingBottom='72px'></Box>
+  {/_ <ResponsiveFooter /> _/}
+  </Container>
+  </>
+  '''
+- inputProps 제거
+  '''
+  // inputProps={{
+  //   inputMode: 'numeric',
+  //   pattern: '[0-9]*',
+  // }}
+  '''
+- Enter 시 다음 것 넘어가기
+  '''
+  export const handleEnter = event => {
+  if (event.key.toLowerCase() === 'enter') {
+  const form = event.target.form;
+  const index = [...form].indexOf(event.target);
+
+      if (form.elements[index + 1].innerText === 'BACK') {
+        form.elements[index + 2].focus();
+      } else {
+        form.elements[index + 1].focus();
+      }
+
+      event.preventDefault();
+
+  }
+  };
+
+'''
+
+- https://www.data.go.kr/data/15057511/openapi.do
+- 부동산 실거래가 가져오기
+  국토교통부 실거래가 정보
+  https://www.data.go.kr/

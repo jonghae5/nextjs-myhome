@@ -5,10 +5,12 @@ import { Paper, Container, Box } from '@mui/material';
 const AppLayout = ({ children }) => {
   return (
     <>
-      <ResponsiveAppBar />
-      {children}
-      <Box paddingBottom='72px'></Box>
-      {/* <ResponsiveFooter /> */}
+      <Container sx={{ paddingX: 0 }} maxWidth='sm'>
+        <ResponsiveAppBar />
+        {children}
+        <Box paddingBottom='72px'></Box>
+        {/* <ResponsiveFooter /> */}
+      </Container>
     </>
   );
 };

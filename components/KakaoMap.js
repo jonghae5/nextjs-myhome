@@ -1,5 +1,7 @@
+import { Typography } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { markerdata } from './MarkerData';
+import { useTheme, useMediaQuery } from '@mui/material';
 
 const KakaoMap = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -15,6 +17,8 @@ const KakaoMap = () => {
     if (!mapLoaded) return;
 
     kakao.maps.load(() => {
+      // 모바일 사용하기위해 화질 Down
+      kakao.maps.disableHD();
       const container = document.getElementById('map');
       const options = {
         center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
@@ -24,10 +28,10 @@ const KakaoMap = () => {
 
       // ***  클러스터링 및 마커 표시 ***
       var clusterer = new kakao.maps.MarkerClusterer({
-        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
-        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+        map: map, // 지도 객체
+        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치
         minLevel: 10, // 클러스터 할 최소 지도 레벨
-        disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정한다
+        disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정
       });
 
       const markers = markerdata.map(function (data, idx) {
@@ -51,11 +55,6 @@ const KakaoMap = () => {
       );
 
       // *** 인포윈도우 ***
-      function closeInfoWindow() {
-        for (var idx = 0; idx < infowindows.length; idx++) {
-          infowindows[idx].close();
-        }
-      }
 
       const infowindows = markerdata.map(function (data, idx) {
         return new kakao.maps.InfoWindow({
@@ -64,16 +63,33 @@ const KakaoMap = () => {
         });
       });
 
+      function closeInfoWindow() {
+        for (var idx = 0; idx < infowindows.length; idx++) {
+          infowindows[idx].close();
+        }
+      }
+
       markers.map((marker, idx) => {
         kakao.maps.event.addListener(marker, 'click', function () {
+          // 모든 마커 윈도우 제거
           closeInfoWindow();
-          // 마커 위에 인포윈도우를 표시합니다
+          // 마커 위에 인포윈도우를 표시
           infowindows[idx].open(map, marker);
         });
+        // 맵 클릭시 인포 윈도우 제거
         kakao.maps.event.addListener(map, 'click', function () {
           infowindows[idx].close();
         });
       });
+      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+      const mapTypeControl = new kakao.maps.MapTypeControl();
+      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      const zoomControl = new kakao.maps.ZoomControl();
+      map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       // ****클릭****
       const clickHandler = function (event) {
@@ -84,12 +100,19 @@ const KakaoMap = () => {
     });
   }, [mapLoaded]);
 
+  // Media Query
+  const matches = useMediaQuery('(min-width:600px)');
+
   return (
     <div
       id='map'
+      //   height=
       style={{
-        width: '500px',
-        height: '400px',
+        width: '99%',
+        height: matches ? '500px' : '100vh',
+        borderStyle: 'solid',
+        borderWidth: 'medium',
+        borderColor: '#D8D8D8',
       }}
     ></div>
   );

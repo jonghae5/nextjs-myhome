@@ -9,6 +9,7 @@ import {
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Field } from 'formik';
 import { TextField } from 'formik-mui';
+import { handleEnter } from '../../util/handleEnter';
 const AbilityFormMoney = ({ formName = 'ability' }) => {
   const money = [
     '주식',
@@ -52,10 +53,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -70,10 +72,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -88,10 +91,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -106,10 +110,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -124,10 +129,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
@@ -142,10 +148,11 @@ const AbilityFormMoney = ({ formName = 'ability' }) => {
             fullWidth
             variant='standard'
             type='number'
-            inputProps={{
-              inputMode: 'numeric',
-              pattern: '[0-9]*',
-            }}
+            // inputProps={{
+            //   inputMode: 'numeric',
+            //   pattern: '[0-9]*',
+            // }}
+            onKeyPress={handleEnter}
           />
         </Box>
       </Grid>
