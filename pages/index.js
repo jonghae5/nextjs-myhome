@@ -6,7 +6,8 @@ import ScrollTop from '../components/ScrollTop';
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AppLayout from '../components/layout/AppLayout';
-
+import { useDispatch } from 'react-redux';
+import { asyncLoadMyInfo } from '../slices/userSlice';
 const paperSX = {
   boxShadow: 3,
   '&:hover': {
@@ -22,6 +23,10 @@ export default function Home() {
   // for (let i = 0; i < 50; i++) {
   //   arr.push(i);
   // }
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(asyncLoadMyInfo());
+  }, [dispatch]);
 
   let win;
   useEffect(() => {

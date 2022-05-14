@@ -1,13 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const name = 'ability';
+const url = 'http://localhost:3065';
+axios.defaults.withCredentials = true;
 
 export const initialState = {
-  data: {
+  basic: {
     yearMoney: 0,
     savingRatioMoney: 0,
     mortgageLoan: 0,
-
+  },
+  data: {
     stockMoney: 0,
     bitcoinMoney: 0,
     savingMoney: 0,
@@ -26,15 +30,23 @@ export const initialState = {
     schoolLoan: 0,
     etcLoan: 0,
   },
+  result: {
+    allowMoney: 0,
+    allowJeonse: 0,
+    allowLoan: 0,
+    allow: 0,
+  },
   loading: false,
+  getAbilityLoading: false,
 };
 
 const dummyAbility = {
-  data: {
+  basic: {
     yearMoney: 80000000,
     savingRatioMoney: 65,
     mortgageLoan: 4.0,
-
+  },
+  data: {
     stockMoney: 30000000,
     bitcoinMoney: 0,
     savingMoney: 40000000,
@@ -53,7 +65,14 @@ const dummyAbility = {
     schoolLoan: 0,
     etcLoan: 0,
   },
+  result: {
+    allowMoney: 0,
+    allowJeonse: 0,
+    allowLoan: 0,
+    allow: 0,
+  },
   loading: false,
+  getAbilityLoading: false,
 };
 
 function delay() {
@@ -65,22 +84,36 @@ function delay() {
   );
 }
 
-export const asyncAddAbilityInfo = createAsyncThunk(
-  `${name}/form`,
-  async (data, thunkAPI) => {
-    // const response = await thunkAPI.post(data)
-    await delay();
+export const asyncGetAbilityResult = createAsyncThunk(
+  `POST ${name}/result/:userId`,
+  async (id, thunkAPI) => {
+    // console.log(finalData);
+    const response = await axios.get(`${url}/${name}/result/${id}`);
+    // await delay();
+    return response.data;
+  }
+);
 
-    return data;
+export const asyncAddAbilityInfo = createAsyncThunk(
+  `POST ${name}/:userId`,
+  async (data, thunkAPI) => {
+    const { id, ...finalData } = data;
+    // console.log(finalData);
+    const response = await axios.post(`${url}/${name}/${id}`, finalData);
+    // await delay();
+    return response.data;
   }
 );
 
 export const asyncAddAbilityBasicInfo = createAsyncThunk(
-  `${name}/basic`,
+  `POST basic/${name}`,
   async (data, thunkAPI) => {
-    // const response = await thunkAPI.post(data)
-    await delay();
-    return data;
+    console.log(data);
+    const response = await axios.post(`${url}/basic/${name}`, data);
+
+    console.log(response.data);
+    // await delay();
+    return response.data;
   }
 );
 
@@ -102,14 +135,12 @@ const abilitySlice = createSlice({
     [asyncAddAbilityBasicInfo.fulfilled]: (state, action) => {
       console.log('성공');
       state.loading = false;
-      state.data.mortgageLoan = action.payload.mortgageLoan;
-      state.data.savingRatioMoney = action.payload.savingRatioMoney;
-      state.data.yearMoney = action.payload.yearMoney;
+      state.basic = action.payload;
     },
     [asyncAddAbilityBasicInfo.rejected]: (state, action) => {
       console.log('실패');
       state.loading = false;
-      state = initialState;
+      state.basic = initialState.basic;
     },
 
     [asyncAddAbilityInfo.pending]: (state, action) => {
@@ -119,12 +150,27 @@ const abilitySlice = createSlice({
     [asyncAddAbilityInfo.fulfilled]: (state, action) => {
       console.log('성공');
       state.loading = false;
-      state.data = { ...state.data, ...action.payload };
+      state.data = action.payload;
     },
     [asyncAddAbilityInfo.rejected]: (state, action) => {
       console.log('실패');
       state.loading = false;
-      state.data = initialState;
+      state.data = initialState.data;
+    },
+
+    [asyncGetAbilityResult.pending]: (state, action) => {
+      console.log('시도 중');
+      state.getAbilityLoading = true;
+    },
+    [asyncGetAbilityResult.fulfilled]: (state, action) => {
+      console.log('성공');
+      state.getAbilityLoading = false;
+      state.result = action.payload;
+    },
+    [asyncGetAbilityResult.rejected]: (state, action) => {
+      console.log('실패');
+      state.getAbilityLoading = false;
+      state.result = initialState.result;
     },
   },
 });

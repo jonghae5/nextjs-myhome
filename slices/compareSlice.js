@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import axios from 'axios';
 const name = 'compare';
+axios.defaults.withCredentials = true;
 
 export const initialState = {
   data: {

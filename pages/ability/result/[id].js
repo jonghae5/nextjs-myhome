@@ -1,53 +1,36 @@
 import { Typography, Paper, Container, Grid, Button } from '@mui/material';
 
 import React, { useCallback, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AppLayout from '../../../components/layout/AppLayout';
 import ResultForm from '../../../components/ResultForm';
 import KakaoMap from '../../../components/KakaoMap';
 import { useRouter } from 'next/router';
+import { asyncGetAbilityResult } from '../../../slices/abilitySlice';
 
 function priceToString(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 const AbilityResult = () => {
   const router = useRouter();
-  const state = useSelector(state => state.ability.data);
+  const dispatch = useDispatch();
+  const { allowMoney, allowLoan, allowJeonse, allow } = useSelector(
+    state => state.ability.result
+  );
   // 투자 가능 금액 = 현금성 자산 + 주택 관련 자금 - 기존 대출 금액
   // 추가대출능력 30년 기준 저축액 * 30 / (금리)
   // 전세감당능력 30년 기준 저축액 * 30 / (금리 * 2)
 
   // Backend에서 다 가져가야 한다.
-  const moneySum =
-    state.stockMoney +
-    state.bitcoinMoney +
-    state.savingMoney +
-    state.insuranceMoney +
-    state.severanceMoney +
-    state.etcMoney;
-
-  const loanSum =
-    state.schoolLoan +
-    state.jutaekLoan +
-    state.jeonWolLoan +
-    state.businessLoan +
-    state.tenantLoan +
-    state.etcLoan +
-    state.creditLoan;
-  const homeSum = state.jeonDepositHome + state.jutaekPriceHome;
-
-  const allowMoney = moneySum + homeSum - loanSum;
-
-  const allowLoan =
-    (state.yearMoney * (state.savingRatioMoney / 100) * 30) /
-    state.mortgageLoan;
-  const allowJeonse = allowLoan / 2;
-
-  const allow = allowMoney + allowLoan + allowJeonse;
-
   const goKakaoMap = useCallback(() => {
     router.push('/ability/result/kakao');
   });
+  useEffect(() => {
+    const { id } = router.query;
+    // console.log(id);
+    dispatch(asyncGetAbilityResult(id));
+  }, []);
+
   return (
     <AppLayout>
       <ResultForm title='주택 구매력' content='우리 가족 구매 최대치'>

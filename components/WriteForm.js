@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Container, Typography, Paper, Grid, Box, Button } from '@mui/material';
 import { Field, Formik, Form } from 'formik';
 import { TextField } from 'formik-mui';
@@ -9,16 +9,21 @@ import { asyncAddBasicCompare } from '../slices/compareSlice';
 import { useDispatch } from 'react-redux';
 import { abilityBasicFormSchema } from '../util/abilitySchema';
 import { handleEnter } from '../util/handleEnter';
+
+import { useSelector } from 'react-redux';
+
 const WriteForm = ({ formName, title, initialValue }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { id } = useSelector(state => state.user.data);
 
   const onSubmit = useCallback(async value => {
+    const finalValue = { id, ...value };
     if (formName === 'ability') {
-      await dispatch(asyncAddAbilityBasicInfo(value));
+      await dispatch(asyncAddAbilityBasicInfo(finalValue));
       router.push('/ability/1');
     } else {
-      await dispatch(asyncAddBasicCompare(value));
+      await dispatch(asyncAddBasicCompare(finalValue));
       router.push('/compare/1');
     }
   });

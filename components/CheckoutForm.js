@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useDebugValue } from 'react';
 
 import {
   Paper,
@@ -20,6 +20,7 @@ import { abilityFormSchema } from '../util/abilitySchema';
 import { addAbility, asyncAddAbilityInfo } from '../slices/abilitySlice';
 import { addCompare, asyncAddCompare } from '../slices/compareSlice';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 const generateRandomString = () => Math.random().toString(36).slice(2);
 
 const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
@@ -28,6 +29,7 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
   const ABILITY = 'ability';
   const router = useRouter();
   const dispatch = useDispatch();
+  const { id } = useSelector(state => state.user.data);
 
   const handleNext = useCallback(() => {
     setActiveStep(prev => prev + 1);
@@ -46,20 +48,20 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
   });
 
   const onSubmit = useCallback(async value => {
+    const finalValue = { id, ...value };
     switch (data) {
       case COMPARE:
-        console.log(value);
-
-        await dispatch(asyncAddCompare(value));
+        await dispatch(asyncAddCompare(finalValue));
         handleNext();
-        router.push(`result/${generateRandomString()}`);
+        // router.push(`result/${generateRandomString()}`);
+        router.push(`/compare/result/${id}`);
         return;
-
       case ABILITY:
         console.log(value);
-        await dispatch(asyncAddAbilityInfo(value));
+        await dispatch(asyncAddAbilityInfo(finalValue));
         handleNext();
-        router.push(`result/${generateRandomString()}`);
+        // router.push(`result/${generateRandomString()}`);
+        router.push(`/ability/result/${id}`);
         return;
       default:
         return;
