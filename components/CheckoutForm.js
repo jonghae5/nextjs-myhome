@@ -17,8 +17,8 @@ import { Formik, Form } from 'formik';
 import { useDispatch } from 'react-redux';
 
 import { abilityFormSchema } from '../util/abilitySchema';
-import { addAbility, asyncAddAbilityInfo } from '../slices/abilitySlice';
-import { addCompare, asyncAddCompare } from '../slices/compareSlice';
+import { addAbility, asyncAddAbilityInfo } from '../slices/userSlice';
+// import { addCompare, asyncAddCompare } from '../slices/compareSlice';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 const generateRandomString = () => Math.random().toString(36).slice(2);

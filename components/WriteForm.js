@@ -4,7 +4,7 @@ import { Field, Formik, Form } from 'formik';
 import { TextField } from 'formik-mui';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useRouter } from 'next/router';
-import { asyncAddAbilityBasicInfo } from '../slices/abilitySlice';
+import { asyncAddAbilityBasicInfo } from '../slices/userSlice';
 import { asyncAddBasicCompare } from '../slices/compareSlice';
 import { useDispatch } from 'react-redux';
 import { abilityBasicFormSchema } from '../util/abilitySchema';

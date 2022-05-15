@@ -96,36 +96,23 @@ const LoginForm = () => {
                 <Grid container spacing={0.5} justifyContent='space-between'>
                   <Grid item xs={6} sm={6} textAlign='center'>
                     {!session && (
-                      <Button onClick={{}} sx={{ mt: 0.2 }}>
-                        <Box
-                          component='img'
-                          sx={{
-                            height: 45,
-                            width: 200,
-                            maxHeight: { xs: 40, sm: 70 },
-                            maxWidth: { xs: 150, sm: 240 },
-                          }}
-                          alt='네이버 로그인 버튼'
-                          src='/static/images/btnG_완성형.png'
-                        />
-                      </Button>
-                    )}
-                    {session && (
-                      <>
-                        <Button onClick={{}} sx={{ mt: 0.2 }}>
-                          <Box
-                            component='img'
-                            sx={{
-                              height: 45,
-                              width: 200,
-                              maxHeight: { xs: 40, sm: 70 },
-                              maxWidth: { xs: 150, sm: 240 },
-                            }}
-                            alt='네이버 로그아웃 버튼'
-                            src='/static/images/btnG_로그아웃.png'
-                          />
-                        </Button>
-                      </>
+                      <Link href='http://localhost:3065/auth/naver'>
+                        <a>
+                          <Button sx={{ mt: 0.2 }}>
+                            <Box
+                              component='img'
+                              sx={{
+                                height: 45,
+                                width: 200,
+                                maxHeight: { xs: 40, sm: 70 },
+                                maxWidth: { xs: 150, sm: 240 },
+                              }}
+                              alt='네이버 로그인 버튼'
+                              src='/static/images/btnG_완성형.png'
+                            />
+                          </Button>
+                        </a>
+                      </Link>
                     )}
                   </Grid>
                   <Grid item xs={6} sm={6} textAlign='center'>
@@ -147,11 +134,6 @@ const LoginForm = () => {
                           </Button>
                         </a>
                       </Link>
-                    )}
-                    {session && (
-                      <>
-                        <Typography onClick={{}}>카카오 로그인 해제</Typography>
-                      </>
                     )}
                   </Grid>
                 </Grid>

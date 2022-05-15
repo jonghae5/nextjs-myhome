@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import theme from '../../theme/theme';
+import { useSelector } from 'react-redux';
 
 const ResponsiveAppBar = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const ResponsiveAppBar = () => {
   const pages = ['주택구매능력', '소득지출비교']; // page
   const settings = ['Profile', 'Account', 'Dashboard', 'Logout']; // setting
   const title = '내 집은 어디에';
-
+  const { id } = useSelector(state => state.user.data);
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget);
   };
@@ -44,7 +45,11 @@ const ResponsiveAppBar = () => {
   const movePage = useCallback(page => {
     switch (page) {
       case '주택구매능력':
-        return router.push('/ability');
+        if (id) {
+          return router.push('/ability/login');
+        } else {
+          return router.push('/ability');
+        }
       case '소득지출비교':
         return router.push('/compare');
     }
@@ -55,6 +60,9 @@ const ResponsiveAppBar = () => {
   });
   const moveLogin = useCallback(() => {
     router.push('/login');
+  });
+  const moveLogout = useCallback(() => {
+    router.push('http://localhost:3065/auth/logout');
   });
 
   return (
@@ -176,17 +184,23 @@ const ResponsiveAppBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={moveLogin}>
+                <MenuItem>
                   <Typography textAlign='center'>Profile</Typography>
                 </MenuItem>
-                <MenuItem onClick={moveLogin}>
+                <MenuItem>
                   <Typography textAlign='center'>Account</Typography>
                 </MenuItem>
-                <MenuItem onClick={moveLogin}>
-                  <Typography textAlign='center' onClick={moveLogin}>
-                    Login
-                  </Typography>
-                </MenuItem>
+                {id ? (
+                  <MenuItem onClick={moveLogout}>
+                    <Typography textAlign='center' onClick={moveLogout}>
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                ) : (
+                  <MenuItem onClick={moveLogin}>
+                    <Typography textAlign='center'>Login</Typography>
+                  </MenuItem>
+                )}
               </Menu>
             </Box>
           </Toolbar>

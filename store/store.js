@@ -11,8 +11,8 @@ import { userSliceReducer } from '../slices/userSlice';
 
 const logger = createLogger();
 const rootReducer = combineReducers({
-  ability: abilitySliceReducer,
-  compare: compareSliceReducer,
+  // ability: abilitySliceReducer,
+  // compare: compareSliceReducer,
   user: userSliceReducer,
   //   todo: todoSlice.reducer,
   //   user: userSlice.reducer,

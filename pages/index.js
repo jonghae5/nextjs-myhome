@@ -6,8 +6,9 @@ import ScrollTop from '../components/ScrollTop';
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AppLayout from '../components/layout/AppLayout';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { asyncLoadMyInfo } from '../slices/userSlice';
+import { useSelect } from '@mui/base';
 const paperSX = {
   boxShadow: 3,
   '&:hover': {
@@ -18,11 +19,10 @@ const paperSX = {
 };
 export default function Home() {
   const router = useRouter();
-  // 예시
-  // const arr = [];
-  // for (let i = 0; i < 50; i++) {
-  //   arr.push(i);
-  // }
+  const { id, abilityWrite, compareWrite } = useSelector(
+    state => state.user.data
+  );
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(asyncLoadMyInfo());
@@ -33,10 +33,18 @@ export default function Home() {
     win = typeof window !== 'undefined' ? window : undefined;
   }, []);
   const goAbility = useCallback(() => {
-    router.push('/ability');
+    if (id && abilityWrite) {
+      router.push('/ability/login');
+    } else {
+      router.push('/ability');
+    }
   });
   const goCompare = useCallback(() => {
-    router.push('/compare');
+    if (id && compareWrite) {
+      router.push('/compare/login');
+    } else {
+      router.push('/compare');
+    }
   });
   return (
     <>

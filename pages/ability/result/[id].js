@@ -6,7 +6,10 @@ import AppLayout from '../../../components/layout/AppLayout';
 import ResultForm from '../../../components/ResultForm';
 import KakaoMap from '../../../components/KakaoMap';
 import { useRouter } from 'next/router';
-import { asyncGetAbilityResult } from '../../../slices/abilitySlice';
+import {
+  asyncGetAbilityResult,
+  asyncLoadMyInfo,
+} from '../../../slices/userSlice';
 
 function priceToString(price) {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -14,8 +17,10 @@ function priceToString(price) {
 const AbilityResult = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+
   const { allowMoney, allowLoan, allowJeonse, allow } = useSelector(
-    state => state.ability.result
+    state => state.user.ability.result
   );
   // 투자 가능 금액 = 현금성 자산 + 주택 관련 자금 - 기존 대출 금액
   // 추가대출능력 30년 기준 저축액 * 30 / (금리)
@@ -25,11 +30,15 @@ const AbilityResult = () => {
   const goKakaoMap = useCallback(() => {
     router.push('/ability/result/kakao');
   });
+  const { id } = router.query;
   useEffect(() => {
-    const { id } = router.query;
+    if (!id) {
+      return;
+    }
     // console.log(id);
+    dispatch(asyncLoadMyInfo());
     dispatch(asyncGetAbilityResult(id));
-  }, []);
+  }, [id]);
 
   return (
     <AppLayout>

@@ -7,34 +7,34 @@ axios.defaults.withCredentials = true;
 
 export const initialState = {
   basic: {
-    yearMoney: 0,
-    savingRatioMoney: 0,
-    mortgageLoan: 0,
+    yearMoney: null,
+    savingRatioMoney: null,
+    mortgageLoan: null,
   },
   data: {
-    stockMoney: 0,
-    bitcoinMoney: 0,
-    savingMoney: 0,
-    insuranceMoney: 0,
-    severanceMoney: 0,
-    etcMoney: 0,
+    stockMoney: null,
+    bitcoinMoney: null,
+    savingMoney: null,
+    insuranceMoney: null,
+    severanceMoney: null,
+    etcMoney: null,
 
-    jeonDepositHome: 0,
-    jutaekPriceHome: 0,
+    jeonDepositHome: null,
+    jutaekPriceHome: null,
 
-    jeonWolLoan: 0,
-    jutaekLoan: 0,
-    tenantLoan: 0,
-    creditLoan: 0,
-    businessLoan: 0,
-    schoolLoan: 0,
-    etcLoan: 0,
+    jeonWolLoan: null,
+    jutaekLoan: null,
+    tenantLoan: null,
+    creditLoan: null,
+    businessLoan: null,
+    schoolLoan: null,
+    etcLoan: null,
   },
   result: {
-    allowMoney: 0,
-    allowJeonse: 0,
-    allowLoan: 0,
-    allow: 0,
+    allowMoney: null,
+    allowJeonse: null,
+    allowLoan: null,
+    allow: null,
   },
   loading: false,
   getAbilityLoading: false,
@@ -72,7 +72,9 @@ const dummyAbility = {
     allow: 0,
   },
   loading: false,
+  addAbilityInfoLoading: false,
   getAbilityLoading: false,
+  addAbilityBasicInfoLoading: false,
 };
 
 function delay() {
@@ -119,8 +121,8 @@ export const asyncAddAbilityBasicInfo = createAsyncThunk(
 
 const abilitySlice = createSlice({
   name,
-  //   initialState,
-  initialState: dummyAbility,
+  initialState,
+  // initialState: dummyAbility,
   reducers: {
     addAbility: (state, action) => {
       console.log('완료');
@@ -130,31 +132,31 @@ const abilitySlice = createSlice({
   extraReducers: {
     [asyncAddAbilityBasicInfo.pending]: (state, action) => {
       console.log('시도 중');
-      state.loading = true;
+      state.addAbilityBasicInfoLoading = true;
     },
     [asyncAddAbilityBasicInfo.fulfilled]: (state, action) => {
       console.log('성공');
-      state.loading = false;
+      state.addAbilityBasicInfoLoading = false;
       state.basic = action.payload;
     },
     [asyncAddAbilityBasicInfo.rejected]: (state, action) => {
       console.log('실패');
-      state.loading = false;
+      state.addAbilityBasicInfoLoading = false;
       state.basic = initialState.basic;
     },
 
     [asyncAddAbilityInfo.pending]: (state, action) => {
       console.log('시도 중');
-      state.loading = true;
+      state.addAbilityInfoLoading = true;
     },
     [asyncAddAbilityInfo.fulfilled]: (state, action) => {
       console.log('성공');
-      state.loading = false;
+      state.addAbilityInfoLoading = false;
       state.data = action.payload;
     },
     [asyncAddAbilityInfo.rejected]: (state, action) => {
       console.log('실패');
-      state.loading = false;
+      state.addAbilityInfoLoading = false;
       state.data = initialState.data;
     },
 
