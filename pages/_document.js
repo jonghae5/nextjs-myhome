@@ -39,7 +39,7 @@ export default class MyDocument extends Document {
           />
           <meta charSet='utf-8' />
           {/* 여기어때 폰트 */}
-          <link rel='stylesheet' href='../fonts/fonts.css' />
+          {/* <link rel='stylesheet' href='../fonts/fonts.css' /> */}
           {/* 카카오 지도 */}
           <script src='https://developers.kakao.com/sdk/js/kakao.js'></script>
         </Head>
