@@ -15,9 +15,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ScrollTop from '../components/ScrollTop';
 import { Formik, Form } from 'formik';
 import { useDispatch } from 'react-redux';
-
+import { asyncAddAbilityInfo } from '../slices/userSlice';
 import { abilityFormSchema } from '../util/abilitySchema';
-import { addAbility, asyncAddAbilityInfo } from '../slices/userSlice';
+
 // import { addCompare, asyncAddCompare } from '../slices/compareSlice';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
@@ -49,19 +49,20 @@ const CheckoutForm = ({ title, steps, getStepContent, data, initialValue }) => {
 
   const onSubmit = useCallback(async value => {
     const finalValue = { id, ...value };
+
     switch (data) {
+      case ABILITY:
+        await dispatch(asyncAddAbilityInfo(finalValue));
+
+        handleNext();
+        // router.push(`result/${generateRandomString()}`);
+        router.push(`/ability/result/${id}`);
+        return;
       case COMPARE:
         await dispatch(asyncAddCompare(finalValue));
         handleNext();
         // router.push(`result/${generateRandomString()}`);
         router.push(`/compare/result/${id}`);
-        return;
-      case ABILITY:
-        console.log(value);
-        await dispatch(asyncAddAbilityInfo(finalValue));
-        handleNext();
-        // router.push(`result/${generateRandomString()}`);
-        router.push(`/ability/result/${id}`);
         return;
       default:
         return;

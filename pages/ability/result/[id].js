@@ -22,13 +22,8 @@ const AbilityResult = () => {
   const { allowMoney, allowLoan, allowJeonse, allow } = useSelector(
     state => state.user.ability.result
   );
-  // 투자 가능 금액 = 현금성 자산 + 주택 관련 자금 - 기존 대출 금액
-  // 추가대출능력 30년 기준 저축액 * 30 / (금리)
-  // 전세감당능력 30년 기준 저축액 * 30 / (금리 * 2)
-
-  // Backend에서 다 가져가야 한다.
   const goKakaoMap = useCallback(() => {
-    router.push('/ability/result/kakao');
+    router.push('/map');
   });
   const { id } = router.query;
   useEffect(() => {
@@ -37,7 +32,6 @@ const AbilityResult = () => {
     }
     // console.log(id);
     dispatch(asyncLoadMyInfo());
-    dispatch(asyncGetAbilityResult(id));
   }, [id]);
 
   return (
@@ -64,8 +58,7 @@ const AbilityResult = () => {
               구매 가능 금액: {priceToString(allow)}
             </Typography>
           </Grid>
-          <Button onClick={goKakaoMap}>클릭</Button>
-          <KakaoMap />
+          <Button onClick={goKakaoMap}>카카오 지도 클릭</Button>
         </Grid>
       </ResultForm>
     </AppLayout>

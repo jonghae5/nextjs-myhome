@@ -3,7 +3,8 @@ import axios from 'axios';
 const USER = 'user';
 const ABILITY = 'ability';
 const COMPARE = 'compare';
-const url = 'http://localhost:3065';
+
+const url = 'http://localhost:3065/user';
 axios.defaults.withCredentials = true;
 
 export const initialState = {
@@ -45,46 +46,33 @@ function delay() {
 }
 
 export const asyncLoadMyInfo = createAsyncThunk(
-  'GET /',
+  'GET',
   async (data, thunkAPI) => {
     const response = await axios({
       method: 'get',
-      url: `${url}/user/`,
+      url,
     });
-    console.log(response);
+    console.log(response.data);
     return response.data;
   }
 );
 
-export const asyncGetAbilityResult = createAsyncThunk(
-  `POST ${ABILITY}/result/:userId`,
-  async (id, thunkAPI) => {
-    // console.log(finalData);
-    console.log(`${url}/${ABILITY}/result/${id}`);
-    const response = await axios.get(`${url}/${ABILITY}/result/${id}`);
+const realUrl = 'http://localhost:3065';
+export const asyncAddAbilityBasicInfo = createAsyncThunk(
+  `POST basic/${ABILITY}`,
+  async (data, thunkAPI) => {
+    const response = await axios.post(`${realUrl}/basic/${ABILITY}`, data);
+
     // await delay();
     return response.data;
   }
 );
 
 export const asyncAddAbilityInfo = createAsyncThunk(
-  `POST ${ABILITY}/:userId`,
+  `POST user/${ABILITY}/:userId`,
   async (data, thunkAPI) => {
-    const { id, ...finalData } = data;
-    // console.log(finalData);
-    const response = await axios.post(`${url}/${ABILITY}/${id}`, finalData);
-    // await delay();
-    return response.data;
-  }
-);
-
-export const asyncAddAbilityBasicInfo = createAsyncThunk(
-  `POST basic/${ABILITY}`,
-  async (data, thunkAPI) => {
-    console.log(data);
-    const response = await axios.post(`${url}/basic/${ABILITY}`, data);
-
-    console.log(response.data);
+    const { id } = data;
+    const response = await axios.post(`${url}/${ABILITY}/${id}`, data);
     // await delay();
     return response.data;
   }
@@ -108,7 +96,8 @@ const userSlice = createSlice({
     [asyncLoadMyInfo.fulfilled]: (state, action) => {
       console.log('성공');
       state.loading = false;
-      state.data = { ...state.data, ...action.payload };
+      state.data = { ...state.data, ...(action.payload?.userData || null) };
+      state.ability.result = { ...(action.payload?.abilityData || null) };
     },
     [asyncLoadMyInfo.rejected]: (state, action) => {
       console.log('실패');
@@ -138,26 +127,11 @@ const userSlice = createSlice({
     [asyncAddAbilityInfo.fulfilled]: (state, action) => {
       console.log('성공');
       state.ability.addAbilityInfoLoading = false;
-      state.ability.data = action.payload;
+      state.ability.result = action.payload;
     },
     [asyncAddAbilityInfo.rejected]: (state, action) => {
       console.log('실패');
       state.ability.addAbilityInfoLoading = false;
-      state.ability.data = initialState.ability.data;
-    },
-
-    [asyncGetAbilityResult.pending]: (state, action) => {
-      console.log('시도 중');
-      state.ability.getAbilityLoading = true;
-    },
-    [asyncGetAbilityResult.fulfilled]: (state, action) => {
-      console.log('성공');
-      state.ability.getAbilityLoading = false;
-      state.ability.result = action.payload;
-    },
-    [asyncGetAbilityResult.rejected]: (state, action) => {
-      console.log('실패');
-      state.ability.getAbilityLoading = false;
       state.ability.result = initialState.ability.result;
     },
   },
