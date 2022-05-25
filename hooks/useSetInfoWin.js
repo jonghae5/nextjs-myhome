@@ -4,31 +4,57 @@ const useSetInfoWin = (kakaoMap, setMarkers, markers) => {
   if (kakaoMap === null) {
     return;
   }
-  const infowindows = markers.map(function (data, idx) {
-    return new kakao.maps.InfoWindow({
-      content: `<div style="padding:5px;">${data.아파트}</div>\
-          <div style="padding:5px;">${data.거래금액}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-      removable: true, // removeable 속성을 true 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩
-    });
-  });
+  var customOverlayList = [];
+  for (var i = 0; i < setMarkers.length; i++) {
+    var content =
+      '<div class="customOverlayWrap">' +
+      '        <div class="apartment">' +
+      `            ${markers[i].아파트}` +
+      '        </div>' +
+      '        <div class="price">' +
+      `            ${markers[i].거래금액}` +
+      '        </div>' +
+      '        <div class="square">' +
+      `            ${markers[i].전용면적}` +
+      '        </div>' +
+      '          <div class="year">' +
+      `            ${markers[i].건축년도}년` +
+      '        </div>' +
+      '        <div class="address">' +
+      `            ${markers[i].주소}` +
+      '        </div>' +
+      '</div>';
 
-  function closeInfoWindow() {
-    for (var idx = 0; idx < infowindows.length; idx++) {
-      infowindows[idx].close();
+    let position = new kakao.maps.LatLng(markers[i].y, markers[i].x);
+
+    let customOverlay = new kakao.maps.CustomOverlay({
+      position: position,
+      content: content,
+      xAnchor: 0.5,
+      yAnchor: 1,
+      zIndex: 3,
+    });
+    customOverlayList.push(customOverlay);
+  }
+
+  function closeOverlay() {
+    for (var idx = 0; idx < customOverlayList.length; idx++) {
+      customOverlayList[idx].setMap();
     }
   }
 
-  setMarkers.map((marker, idx) => {
-    kakao.maps.event.addListener(marker, 'click', function () {
-      // 모든 마커 윈도우 제거
-      closeInfoWindow();
-      // 마커 위에 인포윈도우를 표시
-      infowindows[idx].open(kakaoMap, marker);
+  for (var j = 0; j < customOverlayList.length; j++) {
+    kakao.maps.event.addListener(setMarkers[j], 'click', function () {
+      closeOverlay();
+      customOverlayList[j].setMap(kakaoMap);
     });
-    // 맵 클릭시 인포 윈도우 제거
-    kakao.maps.event.addListener(kakaoMap, 'click', function () {
-      infowindows[idx].close();
-    });
+  }
+  kakao.maps.event.addListener(kakaoMap, 'click', function () {
+    setTimeout(closeOverlay());
+  });
+
+  kakao.maps.event.addListener(kakaoMap, 'dragend', function () {
+    setTimeout(closeOverlay());
   });
 
   return;

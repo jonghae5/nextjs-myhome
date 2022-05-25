@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import React, { useState } from 'react';
 const USER = 'user';
 const ABILITY = 'ability';
 const COMPARE = 'compare';
@@ -39,8 +40,10 @@ export const asyncAddMarker = createAsyncThunk(
 
 export const asyncAddAbilityMarker = createAsyncThunk(
   `GET map/ability/:userId`,
+
   async (data, thunkAPI) => {
     const { id } = data;
+
     const response = await axios.post(`${url}/ability/${id}`, data);
     return response.data;
   }

@@ -5,7 +5,7 @@ const useGetLocation = (kakaoMap, id) => {
     return;
   }
   const bounds = kakaoMap.getBounds();
-  console.log(bounds);
+  //   console.log(bounds);
   const result = {
     id,
     lowX: bounds['ha'],

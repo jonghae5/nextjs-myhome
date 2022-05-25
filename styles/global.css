@@ -12,3 +12,20 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
+.customOverlayWrap {
+  border-radius: 6px;
+  margin-bottom: 48px;
+  font-size: 14px;
+  float: left;
+  position: relative;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+  background-color: #fff;
+  text-align: center;
+}
+.customOverlayWrap .apartment {
+  color: white;
+  background-color: #d95050;
+  border: 1px solid;
+}

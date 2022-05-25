@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { markerdata } from './MarkerData';
+// import { markerdata } from './MarkerData';
 import { useTheme, useMediaQuery } from '@mui/material';
-import { Button, Typography, Grid, Box } from '@mui/material';
+import {
+  Button,
+  Typography,
+  Grid,
+  Box,
+  TextField,
+  IconButton,
+  Slider,
+  CircularProgress,
+} from '@mui/material';
 import SatelliteAltIcon from '@mui/icons-material/SatelliteAlt';
 import MapIcon from '@mui/icons-material/Map';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +28,8 @@ import useSetMarker from '../hooks/useSetMarker';
 import useDeleteMarkers from '../hooks/useDeleteMarkers';
 import useGetLocation from '../hooks/useGetLocation';
 import useSetInfoWin from '../hooks/useSetInfoWin';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
 const clickedCss = {
   color: 'white',
   backgroundColor: 'black',
@@ -44,11 +55,60 @@ const KakaoMap = ({ children }) => {
   const [lineMap, setLineMap] = useState(false);
 
   const [deleteMarkers, setDeleteMarkers] = useState([]);
+
+  const [toggleSearch, setToggleSearch] = useState(false);
+
+  const [searchValue, setSearchValue] = useState('');
+  const [keyword, setKeyword] = useState('');
+
+  const [filterList, setFilterList] = useState(false);
+  const [squareValue, setSquareValue] = useState([10, 150]);
+
+  const [throttle, setThrottle] = useState(false);
+  const [toggleGetData, setToggleGetData] = useState(false);
+  const handleSquareValue = (event, newValue, activeThumb) => {
+    const minGap = 10;
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (activeThumb === 0) {
+      setSquareValue([
+        Math.min(newValue[0], squareValue[1] - minGap),
+        squareValue[1],
+      ]);
+    } else {
+      setSquareValue([
+        squareValue[0],
+        Math.max(newValue[1], squareValue[0] + minGap),
+      ]);
+    }
+    console.log(squareValue);
+  };
   const { kakaoMap, buyHomeAbility, markers, clusterer } = useSelector(
     state => state.map
   );
+  const textInput = useRef();
+
+  const toggleFilterList = useCallback(() => {
+    setFilterList(state => !state);
+  });
+  const handleSubmitKeyword = useCallback(() => {
+    if (searchValue === '') {
+      alert('주소를 입력해주세요.');
+      return;
+    }
+    setKeyword(searchValue);
+
+    textInput.current.value = '';
+    setSearchValue('');
+  });
 
   const { id } = useSelector(state => state.user.data);
+
+  const clickToggleSearch = useCallback(() => {
+    setToggleSearch(state => !state);
+  });
 
   const toggleBuyHomeAbility = useCallback(() => {
     dispatch(setBuyHomeAbility(!buyHomeAbility));
@@ -86,6 +146,8 @@ const KakaoMap = ({ children }) => {
         const options = {
           center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
           level: 10,
+          // 지도 위치 변경시 panto를 이용할지(부드럽게 이동)
+          // isPanto: true,
         };
         const map = new kakao.maps.Map(container.current, options);
         dispatch(setKakaoMap({ kakaoMap: map }));
@@ -106,36 +168,83 @@ const KakaoMap = ({ children }) => {
     dispatch(setClusterer({ clusterer: initClusterer }));
   }, [kakaoMap]);
 
-  useEffect(() => {
-    if (kakaoMap === null) {
-      return;
-    }
-    kakao.maps.event.addListener(kakaoMap, 'dragend', function () {
-      useDeleteMarkers(kakaoMap, deleteMarkers);
-      const result = useGetLocation(kakaoMap, id);
-      if (buyHomeAbility) {
-        dispatch(asyncAddAbilityMarker(result));
-      } else {
-        dispatch(asyncAddMarker(result));
-      }
-    });
-  }, [kakaoMap]);
   /* 클릭시, 초기 마커 가져오기 */
-
+  /* 드래그시 이벤트 */
   useEffect(() => {
     if (kakaoMap === null) {
       return;
     }
     useDeleteMarkers(kakaoMap, deleteMarkers);
 
-    const result = useGetLocation(kakaoMap, id);
+    const result = { ...useGetLocation(kakaoMap, id), squareValue };
 
     if (buyHomeAbility) {
-      dispatch(asyncAddAbilityMarker(result));
-    } else {
-      dispatch(asyncAddMarker(result));
+      if (throttle) return;
+      if (!throttle) {
+        setThrottle(true);
+        setTimeout(async () => {
+          await dispatch(asyncAddAbilityMarker(result));
+          setThrottle(false);
+        }, 300);
+      }
     }
-  }, [kakaoMap, buyHomeAbility]);
+  }, [kakaoMap, buyHomeAbility, squareValue]);
+
+  useEffect(() => {
+    if (kakaoMap === null) {
+      return;
+    }
+    if (!toggleGetData) {
+      setToggleGetData(true);
+      kakao.maps.event.addListener(kakaoMap, 'dragend', function () {
+        useDeleteMarkers(kakaoMap, deleteMarkers);
+        const result = { ...useGetLocation(kakaoMap, id), squareValue };
+        if (buyHomeAbility) {
+          if (throttle) return;
+          if (!throttle) {
+            setThrottle(true);
+            setTimeout(async () => {
+              dispatch(asyncAddAbilityMarker(result));
+              setThrottle(false);
+            }, 300);
+          }
+        }
+      });
+    }
+    console.log(kakao.maps.event);
+  }, [buyHomeAbility, toggleGetData]);
+  useEffect(() => {
+    if (kakaoMap === null) {
+      return;
+    }
+  }, [kakaoMap]);
+  /* 키워드 검색 */
+  useEffect(() => {
+    if (kakaoMap === null) {
+      return;
+    }
+    var ps = new kakao.maps.services.Places();
+    if (keyword !== '') {
+      ps.keywordSearch(keyword, placesSearchCB);
+    }
+    //
+
+    // 키워드 검색 완료 시 호출되는 콜백함수
+    function placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        var center = new kakao.maps.LatLng(data[0].y, data[0].x);
+        console.log(center);
+        // // 검색된 장소 위치를 기준으로 지도 범위를 재설정
+        kakaoMap.setLevel(3, { anchor: center });
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        alert('검색 결과가 존재하지 않습니다.');
+        return;
+      } else if (status === kakao.maps.services.Status.ERROR) {
+        alert('검색 결과 중 오류가 발생했습니다.');
+        return;
+      }
+    }
+  }, [keyword]);
 
   /*마커 및 클러스터링 표시 */
   useEffect(() => {
@@ -148,11 +257,12 @@ const KakaoMap = ({ children }) => {
       clusterer.clear();
     }
     clusterer.addMarkers(setMarkers);
-    console.log(clusterer);
+
     useSetInfoWin(kakaoMap, setMarkers, markers);
     setDeleteMarkers(setMarkers);
   }, [kakaoMap, markers]);
 
+  /* 클러스터 클릭시 확대*/
   useEffect(() => {
     if ((kakaoMap === null) | (clusterer === null)) {
       return;
@@ -260,6 +370,55 @@ const KakaoMap = ({ children }) => {
 
   return (
     <>
+      {toggleSearch && (
+        <Grid container direction={'row'} justifyContent='flex-start'>
+          <Grid item xs={11}>
+            <TextField
+              inputRef={textInput}
+              onInput={e => {
+                setSearchValue(e.target.value);
+              }}
+              // variant='standard'
+              placeholder='주소를 입력해주세요.'
+              size='small'
+              sx={{ width: '100%' }}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton onClick={handleSubmitKeyword}>
+              <SearchIcon style={{ fill: 'black' }} />
+            </IconButton>
+          </Grid>
+        </Grid>
+      )}
+
+      <Box
+        component='div'
+        sx={{ px: 1, display: filterList ? 'block' : 'none' }}
+      >
+        <Typography sx={{ pl: 1, pt: 1 }} gutterBottom>
+          전용 면적
+        </Typography>
+        <Slider
+          aria-label='평'
+          defaultValue={[10, 150]}
+          value={squareValue}
+          // getAriaValueText={valuetext}
+          valueLabelDisplay='auto'
+          step={10}
+          marks
+          min={10}
+          max={150}
+          sx={{ width: '80%', ml: 6 }}
+          disableSwap
+          onChange={handleSquareValue}
+        />
+      </Box>
+      {throttle && (
+        <CircularProgress
+          sx={{ position: 'absolute', mt: '50%', ml: '50%', zIndex: 5 }}
+        />
+      )}
       <div
         id='map'
         style={{
@@ -290,6 +449,24 @@ const KakaoMap = ({ children }) => {
           justifyContent='flex-start'
           sx={{ mt: 3 }}
         >
+          <Grid item>
+            <Button
+              sx={{
+                zIndex: 2,
+              }}
+              onClick={clickToggleSearch}
+            >
+              <SearchIcon
+                sx={{
+                  borderStyle: 'solid',
+                  borderWidth: 'thin',
+                  borderColor: '#D8D8D8',
+                  color: 'black',
+                }}
+              ></SearchIcon>
+            </Button>
+          </Grid>
+
           <Grid item>
             <Button
               sx={{
@@ -326,6 +503,23 @@ const KakaoMap = ({ children }) => {
                   color: 'black',
                 }}
               ></MapIcon>
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              sx={{
+                zIndex: 2,
+              }}
+              onClick={toggleFilterList}
+            >
+              <FilterListIcon
+                sx={{
+                  borderStyle: 'solid',
+                  borderWidth: 'thin',
+                  borderColor: '#D8D8D8',
+                  color: 'black',
+                }}
+              ></FilterListIcon>
             </Button>
           </Grid>
         </Grid>
