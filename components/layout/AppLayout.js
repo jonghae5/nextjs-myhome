@@ -1,6 +1,7 @@
 import React from 'react';
 import ResponsiveAppBar from './ResponsiveAppBar';
 import ResponsiveFooter from './ResponsiveFooter';
+import ResponsiveDrawer from './ResponsiveDrawer';
 import { Paper, Container, Box } from '@mui/material';
 const AppLayout = ({ children }) => {
   return (

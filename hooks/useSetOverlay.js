@@ -1,6 +1,6 @@
 import React from 'react';
 
-const useSetInfoWin = (kakaoMap, setMarkers, markers) => {
+const useSetOverlay = (kakaoMap, setMarkers, markers) => {
   if (kakaoMap === null) {
     return;
   }
@@ -53,11 +53,11 @@ const useSetInfoWin = (kakaoMap, setMarkers, markers) => {
     setTimeout(closeOverlay());
   });
 
-  kakao.maps.event.addListener(kakaoMap, 'dragend', function () {
-    setTimeout(closeOverlay());
-  });
+  // kakao.maps.event.addListener(kakaoMap, 'dragend', function () {
+  //   setTimeout(closeOverlay());
+  // });
 
   return;
 };
 
-export default useSetInfoWin;
+export default useSetOverlay;

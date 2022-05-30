@@ -27,7 +27,7 @@ import { setBuyHomeAbility, setKakaoMap } from '../slices/mapSlice';
 import useSetMarker from '../hooks/useSetMarker';
 import useDeleteMarkers from '../hooks/useDeleteMarkers';
 import useGetLocation from '../hooks/useGetLocation';
-import useSetInfoWin from '../hooks/useSetInfoWin';
+import useSetOverlay from '../hooks/useSetOverlay';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 const clickedCss = {
@@ -56,7 +56,7 @@ const KakaoMap = ({ children }) => {
 
   const [deleteMarkers, setDeleteMarkers] = useState([]);
 
-  const [toggleSearch, setToggleSearch] = useState(false);
+  const [searchBar, setSearchBar] = useState(false);
 
   const [searchValue, setSearchValue] = useState('');
   const [keyword, setKeyword] = useState('');
@@ -106,12 +106,16 @@ const KakaoMap = ({ children }) => {
 
   const { id } = useSelector(state => state.user.data);
 
-  const clickToggleSearch = useCallback(() => {
-    setToggleSearch(state => !state);
+  const toggleSearchBar = useCallback(() => {
+    setSearchBar(state => !state);
   });
 
   const toggleBuyHomeAbility = useCallback(() => {
-    dispatch(setBuyHomeAbility(!buyHomeAbility));
+    if (id) {
+      dispatch(setBuyHomeAbility(!buyHomeAbility));
+    } else {
+      alert('로그인이 필요합니다.');
+    }
   });
   // var bounds = kakaoMap.getBounds();
 
@@ -142,14 +146,17 @@ const KakaoMap = ({ children }) => {
       kakao.maps.load(() => {
         // 모바일 사용하기위해 화질 Down
         // kakao.maps.disableHD();
-        // const container = document.getElementById('map'); 대신 useRef 사용
+
+        //  대신 useRef 사용
+        // const container = document.getElementById('map');
         const options = {
           center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
           level: 10,
           // 지도 위치 변경시 panto를 이용할지(부드럽게 이동)
-          // isPanto: true,
+          isPanto: true,
         };
         const map = new kakao.maps.Map(container.current, options);
+
         dispatch(setKakaoMap({ kakaoMap: map }));
       });
     };
@@ -164,12 +171,13 @@ const KakaoMap = ({ children }) => {
       averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치
       minLevel: 6, // 클러스터 할 최소 지도 레벨
       disableClickZoom: true, // 클러스터 마커를 클릭했을 때 지도가 확대되지 않도록 설정
+      minClusterSize: 1, // default 2
     });
     dispatch(setClusterer({ clusterer: initClusterer }));
   }, [kakaoMap]);
 
   /* 클릭시, 초기 마커 가져오기 */
-  /* 드래그시 이벤트 */
+
   useEffect(() => {
     if (kakaoMap === null) {
       return;
@@ -187,12 +195,24 @@ const KakaoMap = ({ children }) => {
           setThrottle(false);
         }, 300);
       }
+    } else {
+      if (clusterer) {
+        clusterer.clear();
+      }
+
+      useDeleteMarkers(kakaoMap, deleteMarkers);
     }
   }, [kakaoMap, buyHomeAbility, squareValue]);
+
+  /* 드래그시 이벤트 */
 
   useEffect(() => {
     if (kakaoMap === null) {
       return;
+    }
+
+    if (!buyHomeAbility) {
+      useDeleteMarkers(kakaoMap, deleteMarkers);
     }
     if (!toggleGetData) {
       setToggleGetData(true);
@@ -204,7 +224,7 @@ const KakaoMap = ({ children }) => {
           if (!throttle) {
             setThrottle(true);
             setTimeout(async () => {
-              dispatch(asyncAddAbilityMarker(result));
+              await dispatch(asyncAddAbilityMarker(result));
               setThrottle(false);
             }, 300);
           }
@@ -213,11 +233,23 @@ const KakaoMap = ({ children }) => {
     }
     console.log(kakao.maps.event);
   }, [buyHomeAbility, toggleGetData]);
+
+  /*마커 및 클러스터링 표시 */
   useEffect(() => {
-    if (kakaoMap === null) {
+    if ((kakaoMap === null) | (clusterer === null)) {
       return;
     }
-  }, [kakaoMap]);
+
+    const setMarkers = useSetMarker(kakaoMap, markers, clusterer);
+    if (clusterer?.getMarkers().length > 0) {
+      clusterer.clear();
+    }
+    clusterer.addMarkers(setMarkers);
+
+    useSetOverlay(kakaoMap, setMarkers, markers);
+    setDeleteMarkers(setMarkers);
+  }, [kakaoMap, markers]);
+
   /* 키워드 검색 */
   useEffect(() => {
     if (kakaoMap === null) {
@@ -245,28 +277,12 @@ const KakaoMap = ({ children }) => {
       }
     }
   }, [keyword]);
-
-  /*마커 및 클러스터링 표시 */
-  useEffect(() => {
-    if ((kakaoMap === null) | (clusterer === null)) {
-      return;
-    }
-
-    const setMarkers = useSetMarker(kakaoMap, markers, clusterer);
-    if (clusterer?.getMarkers().length > 0) {
-      clusterer.clear();
-    }
-    clusterer.addMarkers(setMarkers);
-
-    useSetInfoWin(kakaoMap, setMarkers, markers);
-    setDeleteMarkers(setMarkers);
-  }, [kakaoMap, markers]);
-
   /* 클러스터 클릭시 확대*/
   useEffect(() => {
     if ((kakaoMap === null) | (clusterer === null)) {
       return;
     }
+
     kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster) {
       // 현재 지도 레벨에서 3레벨 확대한 레벨
       var level;
@@ -280,7 +296,27 @@ const KakaoMap = ({ children }) => {
       // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합
       kakaoMap.setLevel(level, { anchor: cluster.getCenter() });
     });
+
+    return () =>
+      kakao.maps.event.removeListener(
+        clusterer,
+        'clusterclick',
+        function (cluster) {
+          // 현재 지도 레벨에서 3레벨 확대한 레벨
+          var level;
+          console.log('이전', kakaoMap.getLevel());
+          if (kakaoMap.getLevel() == 6) {
+            level = kakaoMap.getLevel() - 1;
+          } else {
+            level = kakaoMap.getLevel() - 2;
+          }
+          console.log('이후', level);
+          // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합
+          kakaoMap.setLevel(level, { anchor: cluster.getCenter() });
+        }
+      );
   }, [clusterer]);
+
   // 줌 컨트롤
   useEffect(() => {
     if (kakaoMap === null) {
@@ -368,10 +404,21 @@ const KakaoMap = ({ children }) => {
   // Media Query
   const matches = useMediaQuery('(min-width:600px)');
 
+  const iconStyle = {
+    borderStyle: 'solid',
+    borderWidth: 'thin',
+    borderColor: '#D8D8D8',
+    color: 'black',
+  };
   return (
     <>
-      {toggleSearch && (
-        <Grid container direction={'row'} justifyContent='flex-start'>
+      {searchBar && (
+        <Grid
+          container
+          direction={'row'}
+          justifyContent='flex-start'
+          sx={{ boxShadow: 1 }}
+        >
           <Grid item xs={11}>
             <TextField
               inputRef={textInput}
@@ -394,7 +441,7 @@ const KakaoMap = ({ children }) => {
 
       <Box
         component='div'
-        sx={{ px: 1, display: filterList ? 'block' : 'none' }}
+        sx={{ px: 1, display: filterList ? 'block' : 'none', boxShadow: 1 }}
       >
         <Typography sx={{ pl: 1, pt: 1 }} gutterBottom>
           전용 면적
@@ -454,16 +501,9 @@ const KakaoMap = ({ children }) => {
               sx={{
                 zIndex: 2,
               }}
-              onClick={clickToggleSearch}
+              onClick={toggleSearchBar}
             >
-              <SearchIcon
-                sx={{
-                  borderStyle: 'solid',
-                  borderWidth: 'thin',
-                  borderColor: '#D8D8D8',
-                  color: 'black',
-                }}
-              ></SearchIcon>
+              <SearchIcon sx={iconStyle}></SearchIcon>
             </Button>
           </Grid>
 
@@ -477,12 +517,7 @@ const KakaoMap = ({ children }) => {
             >
               <SatelliteAltIcon
                 style={satellite ? clickedCss : unclickedCss}
-                sx={{
-                  borderStyle: 'solid',
-                  borderWidth: 'thin',
-                  borderColor: '#D8D8D8',
-                  color: 'black',
-                }}
+                sx={iconStyle}
               ></SatelliteAltIcon>
             </Button>
           </Grid>
@@ -496,12 +531,7 @@ const KakaoMap = ({ children }) => {
             >
               <MapIcon
                 style={lineMap ? clickedCss : unclickedCss}
-                sx={{
-                  borderStyle: 'solid',
-                  borderWidth: 'thin',
-                  borderColor: '#D8D8D8',
-                  color: 'black',
-                }}
+                sx={iconStyle}
               ></MapIcon>
             </Button>
           </Grid>
@@ -512,14 +542,7 @@ const KakaoMap = ({ children }) => {
               }}
               onClick={toggleFilterList}
             >
-              <FilterListIcon
-                sx={{
-                  borderStyle: 'solid',
-                  borderWidth: 'thin',
-                  borderColor: '#D8D8D8',
-                  color: 'black',
-                }}
-              ></FilterListIcon>
+              <FilterListIcon sx={iconStyle}></FilterListIcon>
             </Button>
           </Grid>
         </Grid>
