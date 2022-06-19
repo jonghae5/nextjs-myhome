@@ -18,6 +18,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BalanceIcon from '@mui/icons-material/Balance';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 const ResponsiveDrawer = ({ toggleDrawer }) => {
   const router = useRouter();
   const { id, nickname } = useSelector(state => state.user.data);
@@ -109,6 +110,14 @@ const ResponsiveDrawer = ({ toggleDrawer }) => {
                 <AttachMoneyIcon />
               </ListItemIcon>
               <ListItemText primary='소득 지출 비교' />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => router.push('/study')}>
+              <ListItemIcon>
+                <MenuBookIcon />
+              </ListItemIcon>
+              <ListItemText primary='부동산 공부' />
             </ListItemButton>
           </ListItem>
         </List>

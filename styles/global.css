@@ -29,3 +29,29 @@ body {
   background-color: #d95050;
   border: 1px solid;
 }
+
+.info-item-mount {
+  animation: 0.7s ease-in-out loadEffect;
+}
+
+@keyframes loadEffect {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.info-item-unmount {
+  animation: 0.5s ease-in-out unloadEffect;
+}
+
+@keyframes unloadEffect {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

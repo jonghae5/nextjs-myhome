@@ -13,7 +13,7 @@ const useGetLocation = (kakaoMap, id) => {
     highX: bounds['oa'],
     highY: bounds['pa'],
   };
-  console.log(result['lowX'], result['lowY'], result['highX'], result['highY']);
+  //   console.log(result['lowX'], result['lowY'], result['highX'], result['highY']);
   return result;
 };
 
