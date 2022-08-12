@@ -460,16 +460,12 @@ const KakaoMap = ({ children }) => {
         handleSquareValue={handleSquareValue}
       />
 
-      {throttle && buyHomeAbility && (
-        <CircularProgress
-          sx={{ position: 'absolute', mt: '50%', ml: '50%', zIndex: 5 }}
-        />
-      )}
+
       <div
         id='map'
         style={{
           width: '99%',
-          height: matches ? '90vh' : '90vh', // 큰놈, 작은 놈
+          height: matches ? '90vh' : '100vh', // 큰놈, 작은 놈
           borderStyle: 'solid',
           borderWidth: 'medium',
           borderColor: '#D8D8D8',
@@ -479,6 +475,7 @@ const KakaoMap = ({ children }) => {
       >
         <AbilityButton
           sx={{
+            position:'absolute',
             mt: 1,
             ml: 1,
             py: 0,
@@ -490,11 +487,17 @@ const KakaoMap = ({ children }) => {
           # 주택 구매 능력
         </AbilityButton>
 
+        {throttle && buyHomeAbility && (
+        <CircularProgress
+          sx={{ position: 'absolute', mt: '70%', ml: '50%', zIndex: 5 }}
+        />
+        )}
+
         <Grid
           container
           direction={'column'}
           justifyContent='flex-start'
-          sx={{ mt: 3 }}
+          sx={{ mt: 5 }}
         >
           <Grid item>
             <Button

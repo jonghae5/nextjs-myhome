@@ -83,7 +83,11 @@ const Study = () => {
 
   const router = useRouter();
   const movePage = value => {
-    router.push(value);
+    if (!window) {
+      return;
+    }
+    // router.push(value);
+    window.open(value);
   };
 
   return (
@@ -108,14 +112,18 @@ const Study = () => {
               <Grid
                 container
                 direction='row'
-                sx={{ mt: 1, fontSize: '16px' }}
+                sx={[{ mt: 1, fontSize: '16px' },  {
+                  '&:hover': {
+                    cursor: 'pointer',
+                    boxShadow: 2,
+                  }}]}
                 onClick={() => movePage(state.url)}
               >
                 <Grid
                   item
                   xs={3}
                   sm={3}
-                  sx={{ color: 'blue', fontWeight: 'medium', mt: 1 }}
+                  sx={{ color: '#1565c0', fontWeight: 'medium', mt: 1 }}
                 >
                   #{alignment}
                 </Grid>
@@ -131,14 +139,18 @@ const Study = () => {
               <Grid
                 container
                 direction='row'
-                sx={{ mt: 1, fontSize: '16px' }}
+                sx={[{ mt: 1, fontSize: '16px' },  {
+                  '&:hover': {
+                    cursor: 'pointer',
+                    boxShadow: 2,
+                  }}]}
                 onClick={() => movePage(state.url)}
               >
                 <Grid
                   item
                   xs={3}
                   sm={3}
-                  sx={{ color: 'blue', fontWeight: 'medium', mt: 1 }}
+                  sx={{ color: '#1565c0', fontWeight: 'medium', mt: 1 }}
                 >
                   #{alignment}
                 </Grid>
@@ -154,14 +166,18 @@ const Study = () => {
               <Grid
                 container
                 direction='row'
-                sx={{ mt: 1, fontSize: '16px' }}
+                sx={[{ mt: 1, fontSize: '16px' },  {
+                  '&:hover': {
+                    cursor: 'pointer',
+                    boxShadow: 2,
+                  }}]}
                 onClick={() => movePage(state.url)}
               >
                 <Grid
                   item
                   xs={3}
                   sm={3}
-                  sx={{ color: 'blue', fontWeight: 'medium', mt: 1 }}
+                  sx={{ color: '#1565c0', fontWeight: 'medium', mt: 1 }}
                 >
                   #{alignment}
                 </Grid>
